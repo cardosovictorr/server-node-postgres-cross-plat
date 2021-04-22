@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 5000;
-const merchant_model = require('./merchant_model');
+//const merchant_model = require('./merchant_model');
 const pool = require("./db");
 const cors = require("cors");
 
@@ -23,7 +23,9 @@ app.listen(port, () => {
 app.post("/users", async (req, res) => {
     try {
         const { name } = req.body;
-        const newName = await pool.query("INSERT INTO users (name) VALUES($1) RETURNING *", [name]);
+        const { email } = req.body;
+        const { password } = req.body;
+        const newName = await pool.query("INSERT INTO users (name, email, password) VALUES($1, $2, $3) RETURNING *", [name, email, password]);
         res.json(newName.rows[0]);
     } catch (err) {
         console.error(err.message);
